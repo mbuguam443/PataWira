@@ -87,22 +87,24 @@ def login_view(request):
         password = request.POST.get("password")
         print("email: ",email)
         print("password: ",password)
-        res = supabase.auth.sign_in_with_password({
-                "email": email,
-                "password": password,
-        })
-        
-        user = res.user
-        if user:
-                request.session["user"] = user.id
-                request.session["email"] = user.email
-                print("user : ", user.email)
-                redirect_to = request.session.pop("last_step", "/")
-                return redirect(redirect_to)
-        else:
-                messages.error(request, "Login failed")
-                return redirect("/login/")
-        
+        try:
+            res = supabase.auth.sign_in_with_password({
+                    "email": email,
+                    "password": password,
+            })
+            
+            user = res.user
+            if user:
+                    request.session["user"] = user.id
+                    request.session["email"] = user.email
+                    print("user : ", user.email)
+                    redirect_to = request.session.pop("last_step", "/")
+                    messages.success(request, "Login success.")
+                    return redirect(redirect_to)
+            
+        except Exception as e:
+            messages.error(request, f"Error: {str(e)}")    
+            return redirect("/login/")
 
 def login(request):
 
