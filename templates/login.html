@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}PataWira - Job Detail{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Hero Area Start-->
+<div class="slider-area ">
+    <div class="single-slider  slider-height2 d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-4"></div>
+                <div class="col-xl-4">
+                    <div class="hero-cap text-center">
+                        <h1>Login</h1>
+
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <li style="color: red;">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <form action="/loginsubmit/" method="post" class="form-contact contact_form mt-5">
+                            {% csrf_token %}
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <input class="form-control" name="email" id="email" type="email"
+                                        onfocus="this.placeholder = ''"
+                                        onblur="this.placeholder = 'Enter email address'" placeholder="Email" required>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input class="form-control" name="password" id="Password" type="password"
+                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Password'"
+                                        placeholder="Enter Password" required>
+                                </div>
+                            </div>
+
+                            <br><br>
+
+                            <div class="form-group mt-3">
+
+                                <button type="submit" class="button button-contactForm boxed-btn">Login</button>
+                            </div>
+                        </form>
+
+
+
+
+
+
+                    </div>
+                </div>
+                <div class="col-xl-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero Area End -->
+<!-- ================ contact section start ================= -->
+
+<!-- ================ contact section end ================= -->
+{% endblock %}

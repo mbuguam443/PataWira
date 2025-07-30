@@ -60,13 +60,20 @@
                                             <li><a href="/joblisting">Find a Jobs </a></li>
                                             <li><a href="/about">About</a></li>
                                             <li><a href="/contactus">Contact</a></li>
+                                            {% if request.session.user %}
+                                            <li><a href="/my-applications/">Application status</a></li>
+                                            <li><a href="/logout/">Log out</a></li>
+                                            {% endif %}
+                                            
                                         </ul>
                                     </nav>
                                 </div>          
                                 <!-- Header-btn -->
                                 <div class="header-btn d-none f-right d-lg-block">
-                                    <a href="#" class="btn head-btn1">Register</a>
-                                    <a href="#" class="btn head-btn2">Login</a>
+                                    {% if not  request.session.user %}
+                                    <a href="/signup" class="btn head-btn1">Register</a>
+                                    <a href="/login" class="btn head-btn2">Login</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

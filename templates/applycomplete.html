@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}PataWira - Job Detail{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Hero Area Start-->
+<!-- &#10004;&#10006; -->
+<div class="slider-area ">
+    <div class="single-slider  slider-height2 d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-4"></div>
+                <div class="col-xl-4">
+                    <div class="hero-cap text-center">
+                        <h1>Application complete </h1>
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <h3>
+                                <li style="color: rgb(9, 255, 0);">{{ message }}
+                                </li>
+                            </h3>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <div class="form-group mt-3">
+
+                            <a href="/joblisting" class="button button-contactForm boxed-btn">Go back</a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xl-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero Area End -->
+<!-- ================ contact section start ================= -->
+
+<!-- ================ contact section end ================= -->
+{% endblock %}

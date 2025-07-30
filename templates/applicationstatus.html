@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}PataWira - Job Detail{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Hero Area Start-->
+<div class="slider-area ">
+    <div class="single-slider section-overly slider-height2 d-flex align-items-center"
+        data-background="{% static 'assets/img/hero/banner.png' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2>Application Status</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero Area End -->
+<!-- ================ contact section start ================= -->
+<section class="contact-section">
+    <div class="container">
+
+
+        <div class="row">
+            <div class="col-12">
+                <center><h2 class="contact-title">Jobs you have applied</h2></center>
+            </div>
+             <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Company Name</th>
+                            <th>Location</th>
+                            <th>applied on</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            
+                            
+                            <td>{{ app.job_title }}</td>
+                            <td>{{ app.company_name }}</td>
+                            <td>{{ app.location }}</td>
+                            <td >Applied<span class="created-at" data-time="{{ app.appliedon }}"></span></td>
+                            <td><h3><span class="badge bg-danger" style="color: white;">{{app.status}}</span></h3></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+             <div class="col-lg-2"></div>
+
+        </div>
+    </div>
+</section>
+<!-- ================ contact section end ================= -->
+{% endblock %}

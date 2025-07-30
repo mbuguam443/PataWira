@@ -92,12 +92,19 @@
                               <li>Location : <span>{{todo.location}}</span></li>
                               <li>Vacancy : <span>{{todo.vacancy}}</span></li>
                               <li>Job nature : <span>{{todo.job_nature}}</span></li>
-                              <li>Salary :  <span>$7,800 yearly</span></li>
+                              <li>Salary :  <span>{{todo.salary_range}}</span></li>
                               <li>Deadline date : <span>{{todo.application_deadline}}</span></li>
                           </ul>
+                        {% if not  request.session.user %}
                          <div class="apply-btn2">
-                            <a href="#" class="btn">Apply Now</a>
+                            <a href="/login" class="btn">Login to Apply</a>
                          </div>
+                        {% else %}
+                          <div class="apply-btn2">
+                            <a href="/applynow/{{todo.id}}/" class="btn">Apply Now</a>
+                         </div>
+                        {% endif %}
+    
                        </div>
                         
                     </div>

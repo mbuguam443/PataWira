@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}PataWira - Job Detail{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Hero Area Start-->
+<div class="slider-area ">
+    <div class="single-slider  slider-height2 d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-4"></div>
+                <div class="col-xl-4">
+                    <div class="hero-cap text-center">
+                        <h1>Fill in this Information to apply</h1>
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <li style="color: red;">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <form action="/submit-application/" method="post" class="form-contact contact_form mt-5">
+                            {% csrf_token %}
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <input class="form-control" name="job_id" id="jobid" type="text"
+                                        onfocus="this.placeholder = ''"
+                                        onblur="this.placeholder = 'Enter  jobid'" placeholder="jobid" value="{{jobid}}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <input class="form-control" name="full_name" id="fullname" type="fullname"
+                                        onfocus="this.placeholder = ''"
+                                        onblur="this.placeholder = 'Enter  fullname'" placeholder="fullname" required>
+                                </div>
+                            </div>
+
+                            
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input class="form-control" name="phone_number" id="phonenumber" type="number"
+                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter phonenumber'"
+                                        placeholder="Enter phonenumber" required>
+                                </div>
+                            </div>
+
+                            <br><br>
+
+                            <div class="form-group mt-3">
+
+                                <button type="submit" class="button button-contactForm boxed-btn">Apply</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-xl-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero Area End -->
+<!-- ================ contact section start ================= -->
+
+<!-- ================ contact section end ================= -->
+{% endblock %}
