@@ -224,6 +224,23 @@
 		<!-- Jquery Plugins, main Jquery -->	
         <script src="{% static 'assets/js/plugins.js' %}"></script>
         <script src="{% static 'assets/js/main.js' %}"></script>
+        <script>
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000); // seconds
+
+            if (diff < 60) return "Just now";
+            if (diff < 3600) return `${Math.floor(diff / 60)} min(s) ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} hour(s) ago`;
+            return `${Math.floor(diff / 86400)} day(s) ago`;
+        }
+
+        document.querySelectorAll('.created-at').forEach(el => {
+            const timestamp = el.dataset.time;
+            el.innerText = "Posted " + timeAgo(timestamp);
+        });
+        </script>
         
     </body>
 </html>
