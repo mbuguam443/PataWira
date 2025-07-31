@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}PataWira - Job Detail{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Hero Area Start-->
+<div class="slider-area ">
+    <div class="single-slider  slider-height2 d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3"></div>
+                <div class="col-xl-6">
+                    <div class="hero-cap text-center">
+                        <h1>Manage Applications</h1>
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <li style="color: red;">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <form method="get" class="form-contact contact_form mt-5">
+                            {% csrf_token %}
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <input class="form-control" name="q" id="jobid" type="text"
+                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search JOb'"
+                                        placeholder="Search by name, email or job" value="{{ request.GET.q }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+
+                                <button type="submit" class="button button-contactForm boxed-btn">Search
+                                    Applicant</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+                <div class="col-xl-3"></div>
+                <div class="col-xl-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Applicant</th>
+                                    <th>Email</th>
+                                    <th>Phone Number</th>
+                                    <th>Job Title</th>
+                                    <th>Status</th>
+                                    <th>Submitted At</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ app.full_name }}</td>
+                                    <th>{{ app.email }}</th>
+                                    <td>{{ app.phone_number }}</td>
+                                    <td>{{ app.job_title }}</td>
+                                    <td>{% if app.status == "Pending" %}
+                                            <span class="badge badge-warning">{{ app.status }}</span>
+                                        {% elif app.status == "Accepted" %}
+                                            <span class="badge badge-success">{{ app.status }}</span>
+                                        {% elif app.status == "Rejected" %}
+                                            <span class="badge badge-danger">{{ app.status }}</span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">{{ app.status }}</span>
+                                        {% endif %}</td>
+                                    <td>Applied <span class="created-at" data-time="{{ app.created_at }}"></span></td>
+                                    <td>
+                                        <form method="post" action="{% url 'update_application_status' app.id %}">
+                                            {% csrf_token %}
+                                            <div class="input-group">
+                                                <select name="status" class="form-control" required>
+                                                    <option value="Pending" {% if app.status == "Pending" %}selected{% endif %}>Pending</option>
+                                                    <option value="Accepted" {% if app.status == "Accepted" %}selected{% endif %}>Accepted</option>
+                                                    <option value="Rejected" {% if app.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                                                </select>
+
+
+
+
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-sm btn-success">Update</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6">No applications found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero Area End -->
+<!-- ================ contact section start ================= -->
+
+<!-- ================ contact section end ================= -->
+{% endblock %}

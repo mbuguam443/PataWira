@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}PataWira - Job Detail{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Hero Area Start-->
+<div class="slider-area ">
+    <div class="single-slider  slider-height2 d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3"></div>
+                <div class="col-xl-6">
+                    <div class="hero-cap text-center">
+                        <h1>Manage Jobs</h1>
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <li style="color: red;">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <form method="get" class="form-contact contact_form mt-5">
+                            {% csrf_token %}
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <input class="form-control" name="q" id="jobid" type="text"
+                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search JOb'"
+                                        placeholder="Search jobs..." value="{{ request.GET.q }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+
+                                <button type="submit" class="button button-contactForm boxed-btn">Search Job</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+                <div class="col-xl-3"></div>
+                <div class="col-xl-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Company</th>
+                                    <th>Category</th>
+                                    <th>Nature</th>
+                                    <th>Location</th>
+                                    <th>Salary</th>
+                                    <th>Skills</th>
+                                    <th>Deadline</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for job in jobs %}
+                                <tr>
+                                    <td>{{ job.title }}</td>
+                                    <td>{{ job.company_name }}</td>
+                                    <td>{{ job.Category }}</td>
+                                    <td>{{ job.job_nature }}</td>
+                                    <td>{{ job.location }}</td>
+                                    <td>{{ job.yearly_salary }}</td>
+                                    <td>
+                                        {{job.skills}}
+                                    </td>
+                                    <td>{{ job.application_deadline }}</td>
+                                    <td>
+                                        <h4><a class="badge badge-primary" href="{% url 'edit_job' job.id %}">edit</a>|
+                                            <a class="badge badge-danger" href="/jobs/delete/{{job.id}}/"
+                                                onclick="return confirm('Are you sure you want to delete this job?');">delete</a>
+                                        </h4>
+
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center">No jobs posted yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero Area End -->
+<!-- ================ contact section start ================= -->
+
+<!-- ================ contact section end ================= -->
+{% endblock %}

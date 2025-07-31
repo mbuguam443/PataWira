@@ -17,5 +17,15 @@ urlpatterns=[
     path("applynow/<int:id>/",views.Applynow,name="applynow"),
     path("applycomplete",views.ApplyComplete,name="applycomplete"),
     path("submit-application/", views.submit_application_view, name="submit_application"),
-    path("my-applications/", views.my_applications, name="my_applications")
+    path("my-applications/", views.my_applications, name="my_applications"),
+    path("postjob/", views.PostJobs, name="postjob"),
+    path('post-job/', views.create_job, name='create_job'),
+    path("jobs/edit/<int:job_id>/", views.edit_job, name="edit_job"),
+
+    path("editjob/<int:id>/", views.EditJob, name="editjob"),
+    path("jobs/delete/<int:job_id>/", views.delete_job, name="delete_job"),
+    path("managejob/", views.ManageJob, name="managejob"),
+    path("manageapplication", views.ManageApplication, name="manageapplication"),
+    path("applications/update/<int:app_id>/", views.update_application_status, name="update_application_status"),
+
 ]

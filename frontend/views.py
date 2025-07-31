@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import redirect, render
 from supabase import create_client
 from dotenv import load_dotenv
@@ -187,7 +188,7 @@ def my_applications(request):
     # Step 2: Fetch job details for those job_ids
     job_response = supabase.table("job_posts").select("id, title, company_name, location").in_("id", job_ids).execute()
     job_map = {job["id"]: job for job in job_response.data}
-    print("Fetched jobs:", job_response.data)
+    # print("Fetched jobs:", job_response.data)
     # Step 3: Combine application + job info
     combined = []
     for app in applications:
@@ -200,7 +201,144 @@ def my_applications(request):
                 "location":job["location"],
                 "appliedon": app["created_at"],
             })
-    print("combined: ",combined)
+    #print("combined: ",combined)
 
     return render(request, "applicationstatus.html", {"applications": combined})
 
+def PostJobs(request):
+    return render(request,'post_jobs.html')
+
+def EditJob(request):
+    return render(request,'edit_jobs.html')
+
+def ManageJob(request):
+    query = request.GET.get("q", "").strip().lower()
+
+    response = supabase.table("job_posts").select("*").execute()
+    jobs = response.data if response.data else []
+
+    if query:
+        def match(job):
+            return (
+                query in job.get("title", "").lower()
+                or query in job.get("company_name", "").lower()
+                or query in job.get("location", "").lower()
+                or query in job.get("category", "").lower()
+                or any(query in s.lower() for s in job.get("skills", []))
+            )
+        jobs = list(filter(match, jobs))
+    return render(request,'manage_jobs.html',{"jobs": jobs})
+
+def ManageApplication(request):
+    query = request.GET.get("q", "").lower()  # user search input
+
+    # Fetch all applications
+    applications_response = supabase.table("applications").select("*").execute()
+    applications = applications_response.data
+
+    # Fetch job titles
+    jobs_response = supabase.table("job_posts").select("id, title").execute()
+    job_map = {job["id"]: job["title"] for job in jobs_response.data}
+
+    # Add job title to each application
+    for app in applications:
+        app["job_title"] = job_map.get(app["job_id"], "Unknown")
+
+    # Filter based on search query
+    if query:
+        applications = [
+            app for app in applications if
+            query in app.get("full_name", "").lower() or
+            query in app.get("email", "").lower() or
+            query in app["job_title"].lower()
+        ]
+    #print("applications: ",applications)
+    return render(request, "manage_application.html", {
+        "applications": applications,
+        "search_query": query
+    })
+
+def create_job(request):
+    if request.method == "POST":
+        print("category: ",request.POST.get("category", "")) 
+        data = {
+            "Category": request.POST.get("category", ""),
+            "title": request.POST.get("title"),
+            "company_name": request.POST.get("company_name"),
+            "location": request.POST.get("location"),
+            "salary_range": request.POST.get("salary_range"),
+            "job_description": request.POST.get("job_description"),
+            "skills": request.POST.get("skills", "").strip(),        # e.g. "Strength, Teamwork"
+            "experience": request.POST.get("experience", "").strip(), # e.g. "1 year, 2 years"
+            "application_deadline": request.POST.get("application_deadline"),
+            "job_nature": request.POST.get("job_nature"),
+            "yearly_salary": int(request.POST.get("yearly_salary")),
+            "vacancy": int(request.POST.get("vacancy")),
+        }
+
+        supabase.table("job_posts").insert(data).execute()
+        messages.success(request, "Posted successfully !.")
+        return redirect("postjob")  # or wherever you list jobs
+
+    return render(request, "post_jobs.html")  # this should match your form template
+
+
+def delete_job(request, job_id):
+    if request.method == "GET":
+        supabase.table("job_posts").delete().eq("id", job_id).execute()
+    return redirect("managejob")
+
+def edit_job(request, job_id):
+    # 1. Get job from Supabase
+    response = supabase.table("job_posts").select("*").eq("id", job_id).execute()
+    job = response.data[0] if response.data else None
+
+    if request.method == "POST":
+        # 2. Update the job with form data
+        print("Category: ",request.POST.get("category", "").strip())
+        updated_data = {
+            "title": request.POST.get("title"),
+            "company_name": request.POST.get("company_name"),
+            "location": request.POST.get("location"),
+            "salary_range": request.POST.get("salary_range"),
+            "job_description": request.POST.get("job_description"),
+            "skills": request.POST.get("skills", "").strip(),
+            "experience": request.POST.get("experience", "").strip(),
+            "application_deadline": request.POST.get("application_deadline"),
+            "job_nature": request.POST.get("job_nature"),
+            "yearly_salary": int(request.POST.get("yearly_salary")),
+            "vacancy": int(request.POST.get("vacancy")),
+            "Category": request.POST.get("category", "").strip(),
+        }
+
+        supabase.table("job_posts").update(updated_data).eq("id", job_id).execute()
+        return redirect("managejob")
+
+    return render(request, "edit_jobs.html", {"job": job}) 
+
+from collections import Counter
+def home(request):
+    # Fetch all job categories from Supabase (ensure column name matches Supabase exactly)
+    response = supabase.table('job_posts').select('Category').execute()
+
+    # If Supabase uses 'Category' (capital C), access it exactly like that
+    categories = [job['Category'] for job in response.data if job.get('Category')]
+
+    # Count how many jobs per category
+    category_counts = dict(Counter(categories))  # Ensure it's a dict, not just Counter object
+
+    #print("category_counts =", category_counts)
+
+    return render(request, 'index.html', {
+        'category_counts': category_counts
+    }) 
+
+
+def update_application_status(request, app_id):
+    if request.method == "POST":
+        new_status = request.POST.get("status")
+
+        # Update in Supabase
+        supabase.table("applications").update({"status": new_status}).eq("id", app_id).execute()
+
+    return redirect("manageapplication")   
