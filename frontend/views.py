@@ -22,16 +22,17 @@ def home(request):
     response = supabase.table("job_posts").select("*").execute()
     jobs = response.data
 
-    # Extract unique locations
-    all_locations = [job.get("location") for job in jobs if job.get("location")]
-    unique_locations = sorted(set(all_locations))  # remove duplicates and sort
+    # Check for lowercase column
+    categories = [job.get("category") for job in jobs if job.get("category")]
+    category_counts = dict(Counter(categories))
 
-    
-    
-    return render(request,'index.html', {
+    print("category_counts:", category_counts)  # Debug print
+
+    return render(request, 'index.html', {
         "todos": jobs,
-        "locations": unique_locations,
+        "category_counts": category_counts
     })
+
 def jobdetails(request,id):
     request.session["last_step"] = request.path
     todo = supabase.table("job_posts").select("*").eq("id", id).execute().data[0]
@@ -317,21 +318,21 @@ def edit_job(request, job_id):
     return render(request, "edit_jobs.html", {"job": job}) 
 
 from collections import Counter
-def home(request):
-    # Fetch all job categories from Supabase (ensure column name matches Supabase exactly)
-    response = supabase.table('job_posts').select('Category').execute()
+# def home(request):
+#     # Fetch all job categories from Supabase (ensure column name matches Supabase exactly)
+#     response = supabase.table('job_posts').select('Category').execute()
 
-    # If Supabase uses 'Category' (capital C), access it exactly like that
-    categories = [job['Category'] for job in response.data if job.get('Category')]
+#     # If Supabase uses 'Category' (capital C), access it exactly like that
+#     categories = [job['Category'] for job in response.data if job.get('Category')]
 
-    # Count how many jobs per category
-    category_counts = dict(Counter(categories))  # Ensure it's a dict, not just Counter object
+#     # Count how many jobs per category
+#     category_counts = dict(Counter(categories))  # Ensure it's a dict, not just Counter object
 
-    #print("category_counts =", category_counts)
+#     #print("category_counts =", category_counts)
 
-    return render(request, 'index.html', {
-        'category_counts': category_counts
-    }) 
+#     return render(request, 'index.html', {
+#         'category_counts': category_counts
+#     }) 
 
 
 def update_application_status(request, app_id):
